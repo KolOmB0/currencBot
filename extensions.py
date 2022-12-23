@@ -26,10 +26,19 @@ class Convertor:
             amount = float(amount)
         except ValueError:
             raise APIException(f'Не удалось обработать количество {amount}!')
-        
-        r = requests.get(f"https://api.exchangeratesapi.io/latest?base={base_key}&symbols={sym_key}")
+        # Парсим валюты
+        url = f"https://api.apilayer.com/currency_data/convert?to={sym_key}&from={base_key}&amount={amount}"
+        payload = {}
+        headers = {
+            "apikey": "khPHdKv4o1a5NQAavrwZPvXVcnP0LLGm"
+        }
+
+        r = requests.request("GET", url, headers=headers, data=payload)
+        # Ключи валют  base - из которой переводим  rates/result в какую перерводим
+        # amount - количесто волюты
         resp = json.loads(r.content)
-        new_price = resp['rates'][sym_key] * amount
+
+        new_price = resp['result']
         new_price = round(new_price, 3)
         message =  f"Цена {amount} {base} в {sym} : {new_price}"
         return message
