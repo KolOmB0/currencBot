@@ -2,19 +2,15 @@ import telebot
 from extensions import APIException, Convertor
 from config import TOKEN, exchanges
 import traceback
-
-exchanges = {
-    'доллар': 'USD',
-    'евро': 'EUR',
-    'рубль': 'RUB'
-}
-TOKEN = "5856255610:AAHwP3I_Ao8KC8NViXUcXipH2Hrpe31zmbQ"
-
+#Инициализация обект
 bot = telebot.TeleBot(TOKEN)
-
+#Ответ на сообшение
 @bot.message_handler(commands=['start', 'help'])
 def start(message: telebot.types.Message):
-    text = "Приветствие!"
+    text = "Привет! \n Я умею конвертировать валюту ) \n Чтобы у нас все получилось надо \n" \
+           "<имя валюты, цену которой хочеш узнать> " \
+           "<имя валюты, в которой надо узнать цену первой валюты> <количество первой валюты> \n" \
+           "Чтобы увидеть список всех валют набери /values"
     bot.send_message(message.chat.id, text)
 
 @bot.message_handler(commands=['values'])
@@ -22,7 +18,7 @@ def values(message: telebot.types.Message):
     text = 'Доступные валюты:'
     for i in exchanges.keys():
         text = '\n'.join((text, i))
-    bot.reply_to(message, text)
+    bot.reply_to(message, text) #Отмечает сообшение как отвеченные
 
 @bot.message_handler(content_types=['text'])
 def converter(message: telebot.types.Message):
